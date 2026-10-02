@@ -15,6 +15,7 @@ from core.security.token_manager import TokenManager
 
 from chat.repositories.auth import UserRepository
 from chat.services.auth import AuthService
+from core.unit_of_work import UnitOfWork
 
 
 class CustomProvider(Provider):
@@ -56,13 +57,22 @@ class CustomProvider(Provider):
         return UserRepository(session)
 
     @provide(scope=Scope.REQUEST)
+    def get_uow(
+        self,
+        session: AsyncSession,
+    ) -> UnitOfWork:
+        return UnitOfWork(session)
+
+
+    @provide(scope=Scope.REQUEST)
     async def get_auth_service(
         self,
         user_repo: UserRepository,
         password_hasher: PasswordHasher,
-        token_manager: TokenManager
+        token_manager: TokenManager,
+        uow: UnitOfWork,
     ) -> AuthService:
-        return AuthService(user_repo, password_hasher, token_manager)
+        return AuthService(user_repo, password_hasher, token_manager, uow)
 
 
 container = make_async_container(CustomProvider())

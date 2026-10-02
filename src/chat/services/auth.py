@@ -1,7 +1,6 @@
-from dataclasses import dataclass
-
 from core.security.password_hasher import PasswordHasher
 from core.security.token_manager import TokenManager, TokenPair
+from core.unit_of_work import UnitOfWork, transactional
 
 from ..exceptions import common as DomainExceptions
 from ..repositories import UserRepository
@@ -13,12 +12,15 @@ class AuthService:
         self,
         user_repo: UserRepository,
         password_hasher: PasswordHasher,
-        token_manager: TokenManager
+        token_manager: TokenManager,
+        uow: UnitOfWork,
     ) -> None:
         self._user_repo = user_repo
         self._password_hasher = password_hasher
         self._token_manager = token_manager
+        self._uow = uow
 
+    @transactional
     async def signup(self, login: str, nickname: str, password: str) -> TokenPair:
         hashed_password = self._password_hasher.hash(password)
         try:
