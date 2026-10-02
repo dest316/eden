@@ -15,10 +15,10 @@ class ChatParticipant(Base):
     __tablename__ = "chat_participants"
 
     chat_id: Mapped[UUID] = mapped_column(
-        ForeignKey("chats.id"), primary_key=True
+        ForeignKey("chat.id"), primary_key=True
     )
     user_id: Mapped[UUID] = mapped_column(
-        ForeignKey("users.id"), primary_key=True
+        ForeignKey("user.id"), primary_key=True
     )
 
     chat: Mapped["Chat"] = relationship("Chat", back_populates="memberships")

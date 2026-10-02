@@ -17,7 +17,7 @@ class Chat(Base):
     __tablename__ = "chat"
 
     id: Mapped[UUID] = mapped_column(Uuid, default=uuid4, primary_key=True)
-    admin_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    admin_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"), nullable=False)
     name: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.now(UTC))
 

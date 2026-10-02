@@ -19,13 +19,13 @@ class Message(Base):
 
     id: Mapped[UUID] = mapped_column(Uuid, default=uuid4, primary_key=True)
 
-    chat_id: Mapped[UUID] = mapped_column(ForeignKey("chats.id"), nullable=False)
-    sender_id: Mapped[UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    chat_id: Mapped[UUID] = mapped_column(ForeignKey("chat.id"), nullable=False)
+    sender_id: Mapped[UUID | None] = mapped_column(ForeignKey("user.id"), nullable=True)
 
     sender_type: Mapped[SenderType] = mapped_column(Text, nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     reply_to_message_id: Mapped[UUID | None] = mapped_column(
-        ForeignKey("messages.id"), nullable=True
+        ForeignKey("message.id"), nullable=True
     )
     persona_id: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.now(UTC))

@@ -1,0 +1,42 @@
+services:
+  app:
+    build: .
+    env_file:
+      - .env
+    environment:
+      CORE__DATABASE_DSN: postgresql+asyncpg://${POSTGRES_USER:-eden}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@database:5432/${POSTGRES_DB:-eden}
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - eden
+
+  database:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-eden}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-eden}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    networks:
+      - eden
+
+networks:
+  eden:
+    driver: bridge
+
+volumes:
+  postgres_data:
