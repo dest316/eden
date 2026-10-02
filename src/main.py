@@ -1,6 +1,9 @@
+from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
-from core.models import *
+
+from core.bootstrap.provider import container
 
 
 app = FastAPI()
-print("test")
+
+setup_dishka(container=container, app=app)

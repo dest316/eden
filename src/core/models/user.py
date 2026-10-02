@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from .chat_participant import ChatParticipant
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "user"
 
     id: Mapped[UUID] = mapped_column(Uuid, default=uuid4, primary_key=True)
     login: Mapped[str] = mapped_column(Text, nullable=False, unique=True)

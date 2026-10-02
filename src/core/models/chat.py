@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class Chat(Base):
-    __tablename__ = "chats"
+    __tablename__ = "chat"
 
     id: Mapped[UUID] = mapped_column(Uuid, default=uuid4, primary_key=True)
     admin_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), nullable=False)

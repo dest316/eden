@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 class Message(Base):
-    __tablename__ = "messages"
+    __tablename__ = "message"
 
     id: Mapped[UUID] = mapped_column(Uuid, default=uuid4, primary_key=True)
 
