@@ -42,6 +42,14 @@ class UserDTO(BaseDTO):
     created_at: datetime
 
 
+@dataclass(frozen=True)
+class ChatDTO(BaseDTO):
+    id: UUID
+    admin_id: UUID
+    name: str
+    created_at: datetime
+
+
 @dataclass(frozen=True, slots=True)
 class CurrentUser(BaseDTO):
     id: UUID

@@ -13,11 +13,16 @@ from sqlalchemy.ext.asyncio import (
 from core.config import Config
 from core.dto.common import CurrentUser
 from core.security.password_hasher import PasswordHasher
-from core.security.token_manager import InvalidTokenError, TokenExpiredError, TokenManager, UnauthorizedError
+from core.security.token_manager import (
+    InvalidTokenError,
+    TokenExpiredError,
+    TokenManager,
+    UnauthorizedError,
+)
 from core.unit_of_work import UnitOfWork
 
-from chat.repositories.auth import UserRepository
-from chat.services.auth import AuthService
+from chat.repositories import ChatRepository, UserRepository
+from chat.services import AuthService, ChatService
 
 
 
@@ -56,8 +61,12 @@ class CustomProvider(Provider):
         )
 
     @provide(scope=Scope.REQUEST)
-    async def get_auth_repo(self, session: AsyncSession) -> UserRepository:
+    def get_auth_repo(self, session: AsyncSession) -> UserRepository:
         return UserRepository(session)
+
+    @provide(scope=Scope.REQUEST)
+    def get_chat_repo(self, session: AsyncSession) -> ChatRepository:
+        return ChatRepository(session)
 
     @provide(scope=Scope.REQUEST)
     def get_uow(
@@ -76,6 +85,12 @@ class CustomProvider(Provider):
         uow: UnitOfWork,
     ) -> AuthService:
         return AuthService(user_repo, password_hasher, token_manager, uow)
+
+    @provide(scope=Scope.REQUEST)
+    async def get_chat_service(
+        self, chat_repo: ChatRepository, current_user: CurrentUser
+    ) -> ChatService:
+        return ChatService(chat_repo=chat_repo, current_user=current_user)
 
     @provide(scope=Scope.REQUEST)
     async def get_current_user(self, request: Request, token_manager: TokenManager) -> CurrentUser:
