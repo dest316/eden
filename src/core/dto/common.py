@@ -40,3 +40,8 @@ class UserDTO(BaseDTO):
     hashed_pass: str
     visible_nickname: str
     created_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class CurrentUser(BaseDTO):
+    id: UUID

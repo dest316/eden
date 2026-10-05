@@ -2,6 +2,7 @@ from collections.abc import AsyncGenerator
 from datetime import timedelta
 
 from dishka import Provider, Scope, make_async_container, provide
+from fastapi import Request
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -10,12 +11,14 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from core.config import Config
+from core.dto.common import CurrentUser
 from core.security.password_hasher import PasswordHasher
-from core.security.token_manager import TokenManager
+from core.security.token_manager import InvalidTokenError, TokenExpiredError, TokenManager, UnauthorizedError
+from core.unit_of_work import UnitOfWork
 
 from chat.repositories.auth import UserRepository
 from chat.services.auth import AuthService
-from core.unit_of_work import UnitOfWork
+
 
 
 class CustomProvider(Provider):
@@ -73,6 +76,25 @@ class CustomProvider(Provider):
         uow: UnitOfWork,
     ) -> AuthService:
         return AuthService(user_repo, password_hasher, token_manager, uow)
+
+    @provide(scope=Scope.REQUEST)
+    async def get_current_user(self, request: Request, token_manager: TokenManager) -> CurrentUser:
+        authorization = request.headers.get("Authorization")
+
+        if authorization is None:
+            raise UnauthorizedError
+
+        scheme, _, token = authorization.partition(" ")
+
+        if scheme.lower() != "bearer" or not token:
+            raise UnauthorizedError
+
+        try:
+            payload = token_manager.decode_access_token(token)
+        except (InvalidTokenError, TokenExpiredError) as exc:
+            raise UnauthorizedError from exc
+
+        return CurrentUser(id=payload.sub)
 
 
 container = make_async_container(CustomProvider())

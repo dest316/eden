@@ -7,11 +7,15 @@ from core.types.common import TokenType
 
 # Вынести в exceptions/
 class TokenExpiredError(Exception):
-    ...
+    pass
 
 
 class InvalidTokenError(Exception):
-    ...
+    pass
+
+
+class UnauthorizedError(Exception):
+    pass
 
 
 @dataclass(frozen=True)
