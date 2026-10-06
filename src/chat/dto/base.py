@@ -1,17 +1,9 @@
-from dataclasses import dataclass
-from datetime import datetime
-from typing import Any, Self
-from uuid import UUID
-
-from sqlalchemy import inspect
-
-from core.models import Base
-
-
 from dataclasses import dataclass, fields
 from typing import Self
 
 from sqlalchemy import inspect
+
+from core.models.base import Base
 
 
 @dataclass(frozen=True)
@@ -31,25 +23,3 @@ class BaseDTO:
                 if attr.key in dto_fields
             }
         )
-
-
-@dataclass(frozen=True)
-class UserDTO(BaseDTO):
-    id: UUID
-    login: str
-    hashed_pass: str
-    visible_nickname: str
-    created_at: datetime
-
-
-@dataclass(frozen=True)
-class ChatDTO(BaseDTO):
-    id: UUID
-    admin_id: UUID
-    name: str
-    created_at: datetime
-
-
-@dataclass(frozen=True, slots=True)
-class CurrentUser(BaseDTO):
-    id: UUID

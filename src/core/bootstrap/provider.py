@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from core.config import Config
-from core.dto.common import CurrentUser
+from chat.dto import CurrentUser
 from core.security.password_hasher import PasswordHasher
 from core.security.token_manager import (
     InvalidTokenError,

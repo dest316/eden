@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from core.models import User
-from core.dto.common import UserDTO
+from chat.dto import UserDTO
 
 from .base import BaseRepository
 from ..exceptions.common import UniqueConstraintError

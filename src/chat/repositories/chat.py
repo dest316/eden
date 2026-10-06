@@ -2,7 +2,7 @@ from uuid import UUID
 
 from sqlalchemy import select
 
-from core.dto.common import ChatDTO
+from chat.dto import ChatDTO
 from core.models import Chat, ChatParticipant
 
 from .base import BaseRepository

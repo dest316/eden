@@ -1,6 +1,4 @@
-from uuid import UUID
-
-from core.dto.common import ChatDTO, CurrentUser
+from chat.dto import ChatDTO, CurrentUser
 
 from ..repositories import ChatRepository
 
