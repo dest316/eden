@@ -1,13 +1,9 @@
 from dishka.integrations.fastapi import DishkaRoute, FromDishka
 from fastapi import APIRouter
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.security.password_hasher import PasswordHasher
-from core.security.token_manager import TokenManager
 from chat.schemas.auth import LoginRequestBody, LoginResponse, SignupRequestBody, SignupResponse
 
 from ..services.auth import AuthService
-
 
 router = APIRouter(prefix="/auth", route_class=DishkaRoute)
 

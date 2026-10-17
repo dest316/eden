@@ -7,7 +7,6 @@ from ..repositories import UserRepository
 
 
 class AuthService:
-
     def __init__(
         self,
         user_repo: UserRepository,
@@ -39,13 +38,12 @@ class AuthService:
     async def login(self, login: str, password: str) -> TokenPair:
         user = await self._user_repo.get_by("login", login)
         if not user:
-            raise DomainExceptions.EntityNotFoundError(f"There is no user with login \"{login}\"")
-        
+            raise DomainExceptions.EntityNotFoundError(f'There is no user with login "{login}"')
+
         is_password_correct = self._password_hasher.verify(password, user.hashed_pass)
         if not is_password_correct:
             raise DomainExceptions.WrongCredentialsError("Wrong username or password")
-        
+
         access_token = self._token_manager.create_access_token(user.id)
         refresh_token = self._token_manager.create_refresh_token(user.id)
         return TokenPair(access_token=access_token, refresh_token=refresh_token)
-    

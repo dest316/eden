@@ -8,9 +8,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 
 if TYPE_CHECKING:
-    from .user import User
     from .chat_participant import ChatParticipant
     from .message import Message
+    from .user import User
 
 
 class Chat(Base):

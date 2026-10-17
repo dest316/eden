@@ -22,7 +22,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
-database_url = MigrationSettings().core__database_dsn.get_secret_value() # type: ignore
+database_url = MigrationSettings().core__database_dsn.get_secret_value()  # type: ignore
 
 
 def run_migrations_offline() -> None:
@@ -38,9 +38,7 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    context.configure(
-        connection=connection, target_metadata=target_metadata, compare_type=True
-    )
+    context.configure(connection=connection, target_metadata=target_metadata, compare_type=True)
     with context.begin_transaction():
         context.run_migrations()
 

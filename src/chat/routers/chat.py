@@ -6,6 +6,7 @@ from ..services import ChatService, InvitationLinkService
 
 router = APIRouter(prefix="/chat", route_class=DishkaRoute)
 
+
 @router.post("/")
 async def create_chat(
     body: chat_schemas.CreateRequestBody, chat_service: FromDishka[ChatService]
@@ -16,7 +17,9 @@ async def create_chat(
 
 
 @router.get("/")
-async def get_user_chats(chat_service: FromDishka[ChatService]) -> chat_schemas.GetUserChatsResponse:
+async def get_user_chats(
+    chat_service: FromDishka[ChatService],
+) -> chat_schemas.GetUserChatsResponse:
     chats = await chat_service.get_user_chats()
     response = chat_schemas.GetUserChatsResponse(
         data=[chat_schemas.Chat.model_validate(chat, from_attributes=True) for chat in chats]

@@ -18,7 +18,6 @@ class ChatRepository(BaseRepository):
         await self.session.flush()
         return ChatDTO.from_orm_object(chat)
 
-
     async def add_user(self, user_id: UUID, chat_id: UUID) -> bool:
         stmt = (
             insert(ChatParticipant)
@@ -29,12 +28,10 @@ class ChatRepository(BaseRepository):
         ).returning(ChatParticipant)
         return bool(await self.session.scalar(stmt))
 
-
     async def get_by_user(self, user_id: UUID) -> list[ChatDTO]:
         query = select(Chat).join(ChatParticipant).where(ChatParticipant.user_id == user_id)
         chats = await self.session.scalars(query)
         return [ChatDTO.from_orm_object(chat) for chat in chats]
-
 
     async def get_by(self, field: str, value: Any) -> list[ChatDTO]:
         query = select(Chat).where(getattr(Chat, field) == value)

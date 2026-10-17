@@ -10,6 +10,7 @@ from .base import Base
 if TYPE_CHECKING:
     from .chat_participant import ChatParticipant
 
+
 class User(Base):
     __tablename__ = "user"
 

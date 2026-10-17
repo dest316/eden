@@ -1,11 +1,13 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
+
+import jwt
 
 from core.types.common import TokenType
 
 
-# Вынести в exceptions/
+# TODO: Вынести в exceptions/
 class TokenExpiredError(Exception):
     pass
 
@@ -30,12 +32,6 @@ class TokenPayload:
     type: TokenType
     issued_at: datetime
     expires_at: datetime
-
-
-from datetime import UTC, datetime, timedelta
-from uuid import UUID
-
-import jwt
 
 
 class TokenManager:
@@ -70,7 +66,6 @@ class TokenManager:
             token,
             expected_type=TokenType.ACCESS,
         )
-
 
     def decode_refresh_token(self, token: str) -> TokenPayload:
         return self._decode_token(

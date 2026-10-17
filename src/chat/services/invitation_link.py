@@ -30,12 +30,10 @@ class InvitationLinkService:
             raise ForbiddenError
 
         token = secrets.token_urlsafe(16)
-        
+
         await self._invitation_link_repo.set_revoked(chat_id)
         link = await self._invitation_link_repo.add(
-            user_id=self._current_user_id,
-            chat_id=chat_id,
-            token=token
+            user_id=self._current_user_id, chat_id=chat_id, token=token
         )
         return link
 
@@ -59,4 +57,3 @@ class InvitationLinkService:
         result = await self._invitation_link_repo.set_revoked(chat_id)
         if not result:
             raise EntityNotFoundError
-        

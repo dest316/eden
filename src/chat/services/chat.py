@@ -5,7 +5,9 @@ from ..repositories import ChatRepository
 
 
 class ChatService:
-    def __init__(self, chat_repo: ChatRepository, current_user: CurrentUser, uow: UnitOfWork) -> None:
+    def __init__(
+        self, chat_repo: ChatRepository, current_user: CurrentUser, uow: UnitOfWork
+    ) -> None:
         self._chat_repo = chat_repo
         self._current_user_id = current_user.id
         self._uow = uow

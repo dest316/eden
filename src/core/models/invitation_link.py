@@ -8,7 +8,6 @@ from .base import Base
 
 
 class InvitationLink(Base):
-
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
     chat_id: Mapped[UUID] = mapped_column(ForeignKey("chat.id", ondelete="CASCADE"), nullable=False)
     created_by: Mapped[UUID] = mapped_column(ForeignKey("user.id"), nullable=False)

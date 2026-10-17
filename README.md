@@ -1,5 +1,34 @@
 # Eden
 
+## Development checks
+
+Install development dependencies and the Git pre-commit hook:
+
+```sh
+uv sync --locked
+uv run pre-commit install
+```
+
+The hook runs Ruff lint fixes and formatting using the version in `uv.lock`.
+If a hook changes files, review and stage the changes before retrying the commit.
+Run checks manually with:
+
+```sh
+uv run ruff check .
+uv run ruff format --check .
+uv run pre-commit run --all-files
+uv run pytest
+```
+
+## API errors
+
+Service and authentication exceptions are translated to HTTP responses by the
+explicit mapping in `src/chat/exception_handlers.py`, registered in `src/main.py`.
+Responses use `{"detail": "..."}` with a fixed public message. Authentication
+errors return 401 with `WWW-Authenticate: Bearer`; forbidden actions return 403,
+missing entities 404, existing logins 409, and revoked invitations 410.
+Unexpected exceptions retain the default server-error behavior.
+
 ## Run with Docker Compose
 
 Copy `example.env` to `.env` and set `POSTGRES_PASSWORD` and

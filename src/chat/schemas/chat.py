@@ -36,8 +36,7 @@ class IssueLinkResponse(BaseModel):
     revoked_at: datetime | None
 
 
-class RevokeLinkRequestBody(IssueLinkRequestBody):
-    ...
+class RevokeLinkRequestBody(IssueLinkRequestBody): ...
 
 
 class RevokeLinkResponse(BaseModel):

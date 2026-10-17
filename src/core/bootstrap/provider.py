@@ -2,6 +2,7 @@ from collections.abc import AsyncGenerator
 from datetime import timedelta
 
 from dishka import Provider, Scope, make_async_container, provide
+from dishka.integrations.fastapi import FastapiProvider
 from fastapi import Request
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -10,8 +11,15 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from core.config import Config
 from chat.dto import CurrentUser
+from chat.repositories import (
+    ChatRepository,
+    InvitationLinkRepository,
+    RoleRepository,
+    UserRepository,
+)
+from chat.services import AuthService, ChatService, InvitationLinkService
+from core.config import Config
 from core.security.password_hasher import PasswordHasher
 from core.security.token_manager import (
     InvalidTokenError,
@@ -20,14 +28,6 @@ from core.security.token_manager import (
     UnauthorizedError,
 )
 from core.unit_of_work import UnitOfWork
-
-from chat.repositories import (
-    ChatRepository,
-    InvitationLinkRepository,
-    RoleRepository,
-    UserRepository,
-)
-from chat.services import AuthService, ChatService, InvitationLinkService
 
 
 class CustomProvider(Provider):
@@ -87,7 +87,6 @@ class CustomProvider(Provider):
     ) -> UnitOfWork:
         return UnitOfWork(session)
 
-
     @provide(scope=Scope.REQUEST)
     async def get_auth_service(
         self,
@@ -141,4 +140,4 @@ class CustomProvider(Provider):
         return CurrentUser(id=payload.sub)
 
 
-container = make_async_container(CustomProvider())
+container = make_async_container(CustomProvider(), FastapiProvider())

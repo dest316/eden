@@ -4,11 +4,11 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from core.models import User
 from chat.dto import UserDTO
+from core.models import User
 
-from .base import BaseRepository
 from ..exceptions.common import UniqueConstraintError
+from .base import BaseRepository
 
 
 class UserRepository(BaseRepository):
