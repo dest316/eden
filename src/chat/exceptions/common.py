@@ -6,9 +6,17 @@ class UniqueConstraintError(Exception):
     pass
 
 
+class EntityNotFoundError(Exception):
+    pass
+
+
 class WrongCredentialsError(Exception):
     pass
 
 
-class UserNotFoundError(Exception):
+class LinkExpiredError(Exception):
+    pass
+
+
+class ForbiddenError(Exception):
     pass

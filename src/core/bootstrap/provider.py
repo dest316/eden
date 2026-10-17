@@ -21,9 +21,13 @@ from core.security.token_manager import (
 )
 from core.unit_of_work import UnitOfWork
 
-from chat.repositories import ChatRepository, UserRepository
-from chat.services import AuthService, ChatService
-
+from chat.repositories import (
+    ChatRepository,
+    InvitationLinkRepository,
+    RoleRepository,
+    UserRepository,
+)
+from chat.services import AuthService, ChatService, InvitationLinkService
 
 
 class CustomProvider(Provider):
@@ -39,7 +43,7 @@ class CustomProvider(Provider):
 
     @provide(scope=Scope.APP)
     def get_db_sessionmaker(self, engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
-        return async_sessionmaker(engine, expire_on_commit=False)
+        return async_sessionmaker(engine, expire_on_commit=False, autobegin=False)
 
     @provide(scope=Scope.REQUEST)
     async def get_db_session(
@@ -69,6 +73,14 @@ class CustomProvider(Provider):
         return ChatRepository(session)
 
     @provide(scope=Scope.REQUEST)
+    def get_invitation_link_repo(self, session: AsyncSession) -> InvitationLinkRepository:
+        return InvitationLinkRepository(session)
+
+    @provide(scope=Scope.REQUEST)
+    def get_role_repo(self, session: AsyncSession) -> RoleRepository:
+        return RoleRepository(session)
+
+    @provide(scope=Scope.REQUEST)
     def get_uow(
         self,
         session: AsyncSession,
@@ -88,9 +100,26 @@ class CustomProvider(Provider):
 
     @provide(scope=Scope.REQUEST)
     async def get_chat_service(
-        self, chat_repo: ChatRepository, current_user: CurrentUser
+        self, chat_repo: ChatRepository, current_user: CurrentUser, uow: UnitOfWork
     ) -> ChatService:
-        return ChatService(chat_repo=chat_repo, current_user=current_user)
+        return ChatService(chat_repo=chat_repo, current_user=current_user, uow=uow)
+
+    @provide(scope=Scope.REQUEST)
+    async def get_invitation_link_service(
+        self,
+        chat_repo: ChatRepository,
+        role_repo: RoleRepository,
+        invitation_link_repo: InvitationLinkRepository,
+        current_user: CurrentUser,
+        uow: UnitOfWork,
+    ) -> InvitationLinkService:
+        return InvitationLinkService(
+            invitation_link_repo=invitation_link_repo,
+            chat_repo=chat_repo,
+            role_repo=role_repo,
+            current_user=current_user,
+            uow=uow,
+        )
 
     @provide(scope=Scope.REQUEST)
     async def get_current_user(self, request: Request, token_manager: TokenManager) -> CurrentUser:

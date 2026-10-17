@@ -21,3 +21,28 @@ class CreateResponse(BaseModel):
 
 class GetUserChatsResponse(BaseModel):
     data: list[Chat]
+
+
+class IssueLinkRequestBody(BaseModel):
+    chat_id: UUID
+
+
+class IssueLinkResponse(BaseModel):
+    id: UUID
+    chat_id: UUID
+    created_by: UUID
+    token: str
+    created_at: datetime
+    revoked_at: datetime | None
+
+
+class RevokeLinkRequestBody(IssueLinkRequestBody):
+    ...
+
+
+class RevokeLinkResponse(BaseModel):
+    status: str = Field(default="OK")
+
+
+class FollowLinkResponse(BaseModel):
+    chat_id: UUID

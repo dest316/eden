@@ -35,10 +35,11 @@ class AuthService:
         access_token = self._token_manager.create_access_token(user_id)
         return TokenPair(access_token=access_token, refresh_token=refresh_token)
 
+    @transactional
     async def login(self, login: str, password: str) -> TokenPair:
         user = await self._user_repo.get_by("login", login)
         if not user:
-            raise DomainExceptions.UserNotFoundError(f"There is no user with login \"{login}\"")
+            raise DomainExceptions.EntityNotFoundError(f"There is no user with login \"{login}\"")
         
         is_password_correct = self._password_hasher.verify(password, user.hashed_pass)
         if not is_password_correct:

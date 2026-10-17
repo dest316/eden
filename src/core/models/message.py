@@ -28,7 +28,9 @@ class Message(Base):
         ForeignKey("message.id"), nullable=True
     )
     persona_id: Mapped[str | None] = mapped_column(Text, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.now(UTC))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False
+    )
 
     chat: Mapped["Chat"] = relationship("Chat", back_populates="messages")
     sender: Mapped["User | None"] = relationship("User")

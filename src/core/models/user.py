@@ -17,6 +17,8 @@ class User(Base):
     login: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
     hashed_pass: Mapped[str] = mapped_column(Text, nullable=False)
     visible_nickname: Mapped[str] = mapped_column(Text, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.now(UTC))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False
+    )
 
     memberships: Mapped[list["ChatParticipant"]] = relationship(back_populates="user")
