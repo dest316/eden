@@ -9,7 +9,8 @@ uv sync --locked
 uv run pre-commit install
 ```
 
-The hook runs Ruff lint fixes and formatting using the version in `uv.lock`.
+The hook runs Ruff lint fixes, formatting, and the full pytest suite using the
+versions in `uv.lock`.
 If a hook changes files, review and stage the changes before retrying the commit.
 Run checks manually with:
 

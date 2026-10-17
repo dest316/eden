@@ -11,3 +11,9 @@ repos:
         entry: uv run --locked ruff format
         language: system
         types_or: [python, pyi]
+      - id: pytest
+        name: Pytest
+        entry: uv run --locked pytest
+        language: system
+        pass_filenames: false
+        always_run: true
